@@ -1,7 +1,9 @@
 #!/usr/bin/env bash
 
 # Get the curent directory, the script name
+#
 # and the script name with "py" substituted for the extension.
+#
 args="$@"
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 script="${0##*/}"
@@ -10,26 +12,36 @@ NL=$'\n'
 
 # use_py3:
 #   TRUE  = Use if found, use py2 otherwise
+#
 #   FALSE = Use py2
+#
 #   FORCE = Use py3
+#
 use_py3="TRUE"
 
 tempdir=""
 
 set_use_py3_if () {
     # Auto sets the "use_py3" variable based on
+    #
     # conditions passed
+    #
     # $1 = 0 (equal), 1 (greater), 2 (less), 3 (gequal), 4 (lequal)
+    #
     # $2 = OS version to compare
+    #
     # $3 = TRUE/FALSE/FORCE in case of match
+    #
     if [ "$1" == "" ] || [ "$2" == "" ] || [ "$3" == "" ]; then
         # Missing vars - bail with no changes.
+        #
         return
     fi
     local current_os= comp=
     current_os="$(sw_vers -productVersion)"
     comp="$(vercomp "$current_os" "$2")"
     # Check gequal and lequal first
+    #
     if [[ "$1" == "3" && ("$comp" == "1" || "$comp" == "0") ]] || [[ "$1" == "4" && ("$comp" == "2" || "$comp" == "0") ]] || [[ "$comp" == "$1" ]]; then
         use_py3="$3"
     fi
